@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 st.subheader('Wordcloud Generator')
 st.write('Enjoy the app 😊')
@@ -14,13 +14,20 @@ if uploaded_files:
         st.write("Filename:", uploaded_file.name)
         st.dataframe(df)
 
-        # Generate Word Cloud
-        if st.button('Generate Word Cloud'):
-            text_data = ' '.join(df['your_column_name'])  # Replace 'your_column_name' with the actual column containing text data
-            wordcloud = WordCloud().generate(text_data)
+        # Get the first text column for Word Cloud generation
+        text_columns = [col for col in df.columns if df[col].dtype == 'object']
+        if not text_columns:
+            st.warning("No text columns found in the CSV file.")
+        else:
+            selected_column = st.selectbox("Select a text column for Word Cloud", text_columns)
+            text_data = ' '.join(df[selected_column])
 
-            # Plot Word Cloud
-            plt.figure(figsize=(10, 6))
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis('off')
-            st.pyplot(plt)
+            # Generate Word Cloud
+            if st.button('Generate Word Cloud'):
+                wordcloud = WordCloud().generate(text_data)
+
+                # Plot Word Cloud
+                plt.figure(figsize=(10, 6))
+                plt.imshow(wordcloud, interpolation='bilinear')
+                plt.axis('off')
+                st.pyplot(plt)
