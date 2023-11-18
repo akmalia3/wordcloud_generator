@@ -8,7 +8,8 @@ st.write('Enjoy the app 😊')
 
 uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
 for uploaded_file in uploaded_files:
-    bytes_data = pd.read_csv(uploaded_files)
+    bytes_data = uploaded_file.read()
+    df = pd.DataFrame(bytes_Data)
     st.write("filename:", uploaded_file.name)
     st.write(bytes_data)
-    st.dataframe(uploaded_file)
+    st.dataframe(df)
